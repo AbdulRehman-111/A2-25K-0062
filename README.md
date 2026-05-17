@@ -15,11 +15,11 @@ This is assignment 2 for OOP. I extended my assignment 1 car marketplace project
 
 ## Files in this repo
 
-- CarMarketPlace.cpp — all concrete classes and main function
-- Ilistable.h — abstract interface for listings
-- Ivehicle.h — abstract interface for vehicles  
-- Iuser.h — abstract interface for users
-- Isearchable.h — abstract interface for search
+- CarMarketPlace.cpp : all concrete classes and main function
+- Ilistable.h : abstract interface for listings
+- Ivehicle.h : abstract interface for vehicles  
+- Iuser.h : abstract interface for users
+- Isearchable.h : abstract interface for search
 
 ---
 
@@ -34,12 +34,12 @@ g++ -std=c++11 CarMarketPlace.cpp -o carMarketplace
 
 ## Commits
 
-- Commit 1 — added header files (abstract interfaces)
-- Commit 2 — added Engine, Vehicle, Car, Bike classes
-- Commit 3 — added User, Seller, Buyer, Review, Message classes
-- Commit 4 — added CarListing, Admin, Marketplace classes
-- Commit 5 — added main function and tested
-- Commit 6 — final code cleanup
+- Commit 1 : added header files (abstract interfaces)
+- Commit 2 : added Engine, Vehicle, Car, Bike classes
+- Commit 3 : added User, Seller, Buyer, Review, Message classes
+- Commit 4 : added CarListing, Admin, Marketplace classes
+- Commit 5 : added main function and tested
+- Commit 6 : final code cleanup
 
 ---
 
