@@ -6,8 +6,8 @@
 #include "ISearchable.h"
 using namespace std;
 
-
-class Engine {
+class Engine
+{
     string cylinderConfig;
     int powerOutput;
     float cubicCapacity;
@@ -16,7 +16,8 @@ class Engine {
     const string madeIn;
 
 public:
-    Engine() : madeIn("Japan") {
+    Engine() : madeIn("Japan")
+    {
         cylinderConfig = "V4";
         powerOutput = 120;
         cubicCapacity = 1.6f;
@@ -24,7 +25,8 @@ public:
         fuelKind = "Petrol";
     }
 
-    Engine(string config, int power, float cc, bool turbo, string fuel) : madeIn("Japan") {
+    Engine(string config, int power, float cc, bool turbo, string fuel) : madeIn("Japan")
+    {
         cylinderConfig = config;
         powerOutput = power;
         cubicCapacity = cc;
@@ -32,7 +34,8 @@ public:
         fuelKind = fuel;
     }
 
-    Engine(const Engine &src) : madeIn("Japan") {
+    Engine(const Engine &src) : madeIn("Japan")
+    {
         cylinderConfig = src.cylinderConfig;
         powerOutput = src.powerOutput;
         cubicCapacity = src.cubicCapacity;
@@ -43,7 +46,8 @@ public:
     void ignite() { cout << "Engine firing up..." << endl; }
     void shutDown() { cout << "Engine shut down." << endl; }
 
-    void printSpecs() const {
+    void printSpecs() const
+    {
         cout << "Config: " << cylinderConfig
              << " | Power: " << powerOutput << "hp"
              << " | CC: " << cubicCapacity << "L"
@@ -52,7 +56,8 @@ public:
              << " | Built In: " << madeIn << endl;
     }
 
-    void runDiagnostic() const {
+    void runDiagnostic() const
+    {
         cout << "Diagnostic: Engine operating at optimal condition." << endl;
     }
 
@@ -63,12 +68,13 @@ public:
     friend bool engineMatch(const Engine &a, const Engine &b);
 };
 
-bool engineMatch(const Engine &a, const Engine &b) {
+bool engineMatch(const Engine &a, const Engine &b)
+{
     return (a.cylinderConfig == b.cylinderConfig && a.fuelKind == b.fuelKind);
 }
 
-
-class Vehicle : public IVehicle {
+class Vehicle : public IVehicle
+{
 protected:
     string brand;
     string modelName;
@@ -79,7 +85,8 @@ protected:
     const int chassisID;
 
 public:
-    Vehicle(int chassis) : chassisID(chassis) {
+    Vehicle(int chassis) : chassisID(chassis)
+    {
         brand = "";
         modelName = "";
         manufactureYear = 0;
@@ -88,7 +95,8 @@ public:
     }
 
     Vehicle(int chassis, string b, string m, int yr, double price, int km)
-        : chassisID(chassis) {
+        : chassisID(chassis)
+    {
         brand = b;
         modelName = m;
         manufactureYear = yr;
@@ -97,7 +105,8 @@ public:
     }
 
     Vehicle(int chassis, string b, string m, int yr, double price, int km, Engine eng)
-        : chassisID(chassis), engineUnit(eng) {
+        : chassisID(chassis), engineUnit(eng)
+    {
         brand = b;
         modelName = m;
         manufactureYear = yr;
@@ -105,7 +114,8 @@ public:
         odometerKm = km;
     }
 
-    Vehicle(const Vehicle &src) : chassisID(src.chassisID), engineUnit(src.engineUnit) {
+    Vehicle(const Vehicle &src) : chassisID(src.chassisID), engineUnit(src.engineUnit)
+    {
         brand = src.brand;
         modelName = src.modelName;
         manufactureYear = src.manufactureYear;
@@ -116,14 +126,16 @@ public:
     void setPrice(double p) override { askingPrice = p; }
     void logMileage(int km) { odometerKm += km; }
 
-    void displayDetails() const override {
+    void displayDetails() const override
+    {
         cout << manufactureYear << " " << brand << " " << modelName
              << " | Price: Rs." << askingPrice
              << " | KM: " << odometerKm << endl;
         engineUnit.printSpecs();
     }
 
-    void comparePriceTo(double otherPrice) const {
+    void comparePriceTo(double otherPrice) const
+    {
         if (askingPrice < otherPrice)
             cout << brand << " " << modelName << " is cheaper by Rs." << (otherPrice - askingPrice) << endl;
         else
@@ -138,27 +150,30 @@ public:
     int getOdometerKm() const { return odometerKm; }
     int getChassisID() const { return chassisID; }
 
-    bool operator==(const Vehicle &other) const {
+    bool operator==(const Vehicle &other) const
+    {
         return (chassisID == other.chassisID);
     }
 
     friend void printVehicleSummary(const Vehicle &v);
 };
 
-void printVehicleSummary(const Vehicle &v) {
+void printVehicleSummary(const Vehicle &v)
+{
     cout << "[Summary] " << v.brand << " " << v.modelName
          << " (" << v.manufactureYear << ") - Rs." << v.askingPrice << endl;
 }
 
-
-class Car : public Vehicle {
+class Car : public Vehicle
+{
     int doorCount;
     string bodyStyle;
     bool sunroofPresent;
     string transmissionType;
 
 public:
-    Car(int chassis) : Vehicle(chassis) {
+    Car(int chassis) : Vehicle(chassis)
+    {
         doorCount = 4;
         bodyStyle = "Sedan";
         sunroofPresent = false;
@@ -167,21 +182,24 @@ public:
 
     Car(int chassis, string brand, string model, int year, double price, int km,
         Engine eng, int doors, string style, bool sunroof, string trans)
-        : Vehicle(chassis, brand, model, year, price, km, eng) {
+        : Vehicle(chassis, brand, model, year, price, km, eng)
+    {
         doorCount = doors;
         bodyStyle = style;
         sunroofPresent = sunroof;
         transmissionType = trans;
     }
 
-    Car(const Car &src) : Vehicle(src) {
+    Car(const Car &src) : Vehicle(src)
+    {
         doorCount = src.doorCount;
         bodyStyle = src.bodyStyle;
         sunroofPresent = src.sunroofPresent;
         transmissionType = src.transmissionType;
     }
 
-    void displayDetails() const override {
+    void displayDetails() const override
+    {
         Vehicle::displayDetails();
         cout << "  Body: " << bodyStyle << " | Doors: " << doorCount
              << " | Transmission: " << transmissionType
@@ -190,7 +208,8 @@ public:
 
     string getCategory() const override { return "Car"; }
 
-    void showInteriorFeatures() const {
+    void showInteriorFeatures() const
+    {
         cout << "Interior: " << doorCount << "-door " << bodyStyle
              << " with " << transmissionType << " gearbox." << endl;
     }
@@ -200,7 +219,8 @@ public:
     string getBodyStyle() const { return bodyStyle; }
     string getTransmissionType() const { return transmissionType; }
 
-    Car operator+(const Car &other) const {
+    Car operator+(const Car &other) const
+    {
         Car combined(chassisID + other.chassisID);
         combined.askingPrice = askingPrice + other.askingPrice;
         combined.brand = brand + "+" + other.brand;
@@ -210,15 +230,16 @@ public:
     }
 };
 
-
-class Bike : public Vehicle {
+class Bike : public Vehicle
+{
     string bikeType;
     bool hasCarrier;
     string coolingMethod;
     int seatHeight;
 
 public:
-    Bike(int chassis) : Vehicle(chassis) {
+    Bike(int chassis) : Vehicle(chassis)
+    {
         bikeType = "Standard";
         hasCarrier = false;
         coolingMethod = "Air";
@@ -227,21 +248,24 @@ public:
 
     Bike(int chassis, string brand, string model, int year, double price,
          int km, Engine eng, string btype, bool carrier, string cooling, int seatH)
-        : Vehicle(chassis, brand, model, year, price, km, eng) {
+        : Vehicle(chassis, brand, model, year, price, km, eng)
+    {
         bikeType = btype;
         hasCarrier = carrier;
         coolingMethod = cooling;
         seatHeight = seatH;
     }
 
-    Bike(const Bike &src) : Vehicle(src) {
+    Bike(const Bike &src) : Vehicle(src)
+    {
         bikeType = src.bikeType;
         hasCarrier = src.hasCarrier;
         coolingMethod = src.coolingMethod;
         seatHeight = src.seatHeight;
     }
 
-    void displayDetails() const override {
+    void displayDetails() const override
+    {
         Vehicle::displayDetails();
         cout << "  Type: " << bikeType
              << " | Cooling: " << coolingMethod
@@ -250,7 +274,8 @@ public:
 
     string getCategory() const override { return "Bike"; }
 
-    void showBikeSpecs() const {
+    void showBikeSpecs() const
+    {
         cout << "Bike Specs -> Type: " << bikeType
              << " | Seat Height: " << seatHeight << "mm"
              << " | Cooling: " << coolingMethod << endl;
@@ -260,7 +285,8 @@ public:
     string getBikeType() const { return bikeType; }
     bool getHasCarrier() const { return hasCarrier; }
 };
-class User : public IUser {
+class User : public IUser
+{
 protected:
     int userID;
     string fullName;
@@ -270,7 +296,8 @@ protected:
     static int registeredCount;
 
 public:
-    User() : country("Pakistan") {
+    User() : country("Pakistan")
+    {
         userID = 0;
         fullName = "";
         emailAddr = "";
@@ -278,7 +305,8 @@ public:
         registeredCount++;
     }
 
-    User(int id, string name, string email, string phone) : country("Pakistan") {
+    User(int id, string name, string email, string phone) : country("Pakistan")
+    {
         userID = id;
         fullName = name;
         emailAddr = email;
@@ -286,7 +314,8 @@ public:
         registeredCount++;
     }
 
-    User(const User &src) : country("Pakistan") {
+    User(const User &src) : country("Pakistan")
+    {
         userID = src.userID;
         fullName = src.fullName;
         emailAddr = src.emailAddr;
@@ -296,7 +325,8 @@ public:
 
     virtual ~User() {}
 
-    virtual void showProfile() const {
+    virtual void showProfile() const
+    {
         cout << "User [" << userID << "]: " << fullName << " | " << emailAddr << endl;
     }
 
@@ -312,8 +342,8 @@ public:
 
 int User::registeredCount = 0;
 
-
-class Seller : public User {
+class Seller : public User
+{
     float sellerRating;
     int activeListings;
     string baseCity;
@@ -321,7 +351,8 @@ class Seller : public User {
     int avgResponseMins;
 
 public:
-    Seller() : User() {
+    Seller() : User()
+    {
         sellerRating = 0.0f;
         activeListings = 0;
         baseCity = "Unknown";
@@ -329,7 +360,8 @@ public:
         avgResponseMins = 60;
     }
 
-    Seller(int id, string name, string email, string phone, string city) : User(id, name, email, phone) {
+    Seller(int id, string name, string email, string phone, string city) : User(id, name, email, phone)
+    {
         sellerRating = 5.0f;
         activeListings = 0;
         baseCity = city;
@@ -337,7 +369,8 @@ public:
         avgResponseMins = 15;
     }
 
-    Seller(const Seller &src) : User(src) {
+    Seller(const Seller &src) : User(src)
+    {
         sellerRating = src.sellerRating;
         activeListings = src.activeListings;
         baseCity = src.baseCity;
@@ -347,13 +380,16 @@ public:
 
     void addListing() { activeListings++; }
 
-    void adjustRating(float r) {
-        if (r >= 0 && r <= 5) sellerRating = r;
+    void adjustRating(float r)
+    {
+        if (r >= 0 && r <= 5)
+            sellerRating = r;
     }
 
     void toggleVerification() { accountVerified = !accountVerified; }
 
-    void showProfile() const override {
+    void showProfile() const override
+    {
         cout << "Seller [" << userID << "]: " << fullName
              << " | City: " << baseCity
              << " | Rating: " << sellerRating
@@ -366,13 +402,14 @@ public:
     bool isAccountVerified() const { return accountVerified; }
     int getActiveListings() const { return activeListings; }
 
-    bool operator==(const Seller &other) const {
+    bool operator==(const Seller &other) const
+    {
         return (userID == other.userID && emailAddr == other.emailAddr);
     }
 };
 
-
-class Buyer : public User {
+class Buyer : public User
+{
     Vehicle *savedVehicles[5];
     int savedCount;
     double spendingLimit;
@@ -380,49 +417,63 @@ class Buyer : public User {
     bool isPremium;
 
 public:
-    Buyer() : User() {
+    Buyer() : User()
+    {
         savedCount = 0;
         spendingLimit = 0;
         locality = "Unknown";
         isPremium = false;
-        for (int i = 0; i < 5; i++) savedVehicles[i] = NULL;
+        for (int i = 0; i < 5; i++)
+            savedVehicles[i] = NULL;
     }
 
-    Buyer(int id, string name, string email, string phone) : User(id, name, email, phone) {
+    Buyer(int id, string name, string email, string phone) : User(id, name, email, phone)
+    {
         savedCount = 0;
         spendingLimit = 2000000;
         locality = "Karachi";
         isPremium = false;
-        for (int i = 0; i < 5; i++) savedVehicles[i] = NULL;
+        for (int i = 0; i < 5; i++)
+            savedVehicles[i] = NULL;
     }
 
-    Buyer(const Buyer &src) : User(src) {
+    Buyer(const Buyer &src) : User(src)
+    {
         savedCount = src.savedCount;
         spendingLimit = src.spendingLimit;
         locality = src.locality;
         isPremium = src.isPremium;
-        for (int i = 0; i < 5; i++) savedVehicles[i] = src.savedVehicles[i];
+        for (int i = 0; i < 5; i++)
+            savedVehicles[i] = src.savedVehicles[i];
     }
 
-    void saveVehicle(Vehicle *v) {
-        if (savedCount < 5) {
+    void saveVehicle(Vehicle *v)
+    {
+        if (savedCount < 5)
+        {
             savedVehicles[savedCount++] = v;
             cout << "Saved: " << v->getBrand() << " " << v->getModelName() << endl;
-        } else {
+        }
+        else
+        {
             cout << "Saved list is full." << endl;
         }
     }
 
-    void displaySaved() const {
+    void displaySaved() const
+    {
         cout << "--- " << fullName << "'s Saved Vehicles ---" << endl;
         for (int i = 0; i < savedCount; i++)
-            if (savedVehicles[i]) savedVehicles[i]->displayDetails();
+            if (savedVehicles[i])
+                savedVehicles[i]->displayDetails();
     }
 
     void setSpendingLimit(double limit) { spendingLimit = limit; }
 
-    void removeSaved(int index) {
-        if (index >= 0 && index < savedCount) {
+    void removeSaved(int index)
+    {
+        if (index >= 0 && index < savedCount)
+        {
             for (int i = index; i < savedCount - 1; i++)
                 savedVehicles[i] = savedVehicles[i + 1];
             savedVehicles[--savedCount] = NULL;
@@ -430,7 +481,8 @@ public:
         }
     }
 
-    void showProfile() const override {
+    void showProfile() const override
+    {
         cout << "Buyer [" << userID << "]: " << fullName
              << " | Budget: Rs." << spendingLimit
              << " | Area: " << locality
@@ -442,8 +494,8 @@ public:
     bool getPremiumStatus() const { return isPremium; }
 };
 
-
-class Review {
+class Review
+{
     int reviewID;
     int starRating;
     string reviewBody;
@@ -453,7 +505,8 @@ class Review {
     const int maxAllowedRating;
 
 public:
-    Review() : maxAllowedRating(5) {
+    Review() : maxAllowedRating(5)
+    {
         reviewID = 0;
         starRating = 0;
         reviewBody = "";
@@ -462,7 +515,8 @@ public:
         flagged = false;
     }
 
-    Review(int id, int aID, string date) : maxAllowedRating(5) {
+    Review(int id, int aID, string date) : maxAllowedRating(5)
+    {
         reviewID = id;
         starRating = 0;
         reviewBody = "";
@@ -471,7 +525,8 @@ public:
         flagged = false;
     }
 
-    Review(const Review &src) : maxAllowedRating(5) {
+    Review(const Review &src) : maxAllowedRating(5)
+    {
         reviewID = src.reviewID;
         starRating = src.starRating;
         reviewBody = src.reviewBody;
@@ -480,12 +535,16 @@ public:
         flagged = src.flagged;
     }
 
-    void submitReview(int stars, string body) {
-        if (stars >= 1 && stars <= maxAllowedRating) {
+    void submitReview(int stars, string body)
+    {
+        if (stars >= 1 && stars <= maxAllowedRating)
+        {
             starRating = stars;
             reviewBody = body;
             cout << "Review submitted successfully." << endl;
-        } else {
+        }
+        else
+        {
             cout << "Stars must be between 1 and " << maxAllowedRating << "." << endl;
         }
     }
@@ -493,17 +552,21 @@ public:
     void flagReview() { flagged = true; }
     void editBody(string newBody) { reviewBody = newBody; }
 
-    void printReview() const {
+    void printReview() const
+    {
         cout << starRating << "/" << maxAllowedRating << " - " << reviewBody;
-        if (flagged) cout << " [FLAGGED]";
+        if (flagged)
+            cout << " [FLAGGED]";
         cout << endl;
     }
 
     int getStarRating() const { return starRating; }
     bool isFlagged() const { return flagged; }
 
-    Review &operator=(const Review &src) {
-        if (this != &src) {
+    Review &operator=(const Review &src)
+    {
+        if (this != &src)
+        {
             reviewID = src.reviewID;
             starRating = src.starRating;
             reviewBody = src.reviewBody;
@@ -514,13 +577,14 @@ public:
         return *this;
     }
 
-    bool operator==(const Review &other) const {
+    bool operator==(const Review &other) const
+    {
         return (reviewID == other.reviewID && authorID == other.authorID);
     }
 };
 
-
-class Message {
+class Message
+{
     int msgID;
     int senderID;
     int receiverID;
@@ -530,7 +594,8 @@ class Message {
     const int maxBodyLength;
 
 public:
-    Message() : maxBodyLength(500) {
+    Message() : maxBodyLength(500)
+    {
         msgID = 0;
         senderID = 0;
         receiverID = 0;
@@ -539,7 +604,8 @@ public:
         readStatus = false;
     }
 
-    Message(int id, int from, int to, string body, string timestamp) : maxBodyLength(500) {
+    Message(int id, int from, int to, string body, string timestamp) : maxBodyLength(500)
+    {
         msgID = id;
         senderID = from;
         receiverID = to;
@@ -548,7 +614,8 @@ public:
         readStatus = false;
     }
 
-    Message(const Message &src) : maxBodyLength(500) {
+    Message(const Message &src) : maxBodyLength(500)
+    {
         msgID = src.msgID;
         senderID = src.senderID;
         receiverID = src.receiverID;
@@ -557,8 +624,10 @@ public:
         readStatus = src.readStatus;
     }
 
-    Message &operator=(const Message &src) {
-        if (this != &src) {
+    Message &operator=(const Message &src)
+    {
+        if (this != &src)
+        {
             msgID = src.msgID;
             senderID = src.senderID;
             receiverID = src.receiverID;
@@ -571,7 +640,8 @@ public:
 
     void markRead() { readStatus = true; }
 
-    void printMessage() const {
+    void printMessage() const
+    {
         cout << "[Msg #" << msgID << "] From: " << senderID
              << " To: " << receiverID
              << " | " << sentAt
@@ -579,7 +649,8 @@ public:
              << "\n  >> " << msgBody << endl;
     }
 
-    void editBody(string newText) {
+    void editBody(string newText)
+    {
         if ((int)newText.length() <= maxBodyLength)
             msgBody = newText;
         else
@@ -592,19 +663,22 @@ public:
     int getSenderID() const { return senderID; }
     int getReceiverID() const { return receiverID; }
 
-    bool operator==(const Message &other) const {
+    bool operator==(const Message &other) const
+    {
         return (msgID == other.msgID);
     }
 
     friend void logMessageExchange(const Message &m);
 };
 
-void logMessageExchange(const Message &m) {
+void logMessageExchange(const Message &m)
+{
     cout << "[LOG] Message #" << m.msgID << " sent from user "
          << m.senderID << " to user " << m.receiverID
          << " at " << m.sentAt << endl;
 }
-class CarListing : public IListable {
+class CarListing : public IListable
+{
     int listingID;
     Vehicle *vehiclePtr;
     Seller *sellerPtr;
@@ -615,7 +689,8 @@ class CarListing : public IListable {
     static int totalCreated;
 
 public:
-    CarListing() {
+    CarListing()
+    {
         listingID = 0;
         vehiclePtr = NULL;
         sellerPtr = NULL;
@@ -625,7 +700,8 @@ public:
         totalCreated++;
     }
 
-    CarListing(int id, Vehicle *v, Seller *s) {
+    CarListing(int id, Vehicle *v, Seller *s)
+    {
         listingID = id;
         vehiclePtr = v;
         sellerPtr = s;
@@ -635,7 +711,8 @@ public:
         totalCreated++;
     }
 
-    CarListing(const CarListing &src) {
+    CarListing(const CarListing &src)
+    {
         listingID = src.listingID;
         vehiclePtr = src.vehiclePtr;
         sellerPtr = src.sellerPtr;
@@ -647,8 +724,10 @@ public:
         totalCreated++;
     }
 
-    CarListing &operator=(const CarListing &src) {
-        if (this != &src) {
+    CarListing &operator=(const CarListing &src)
+    {
+        if (this != &src)
+        {
             listingID = src.listingID;
             vehiclePtr = src.vehiclePtr;
             sellerPtr = src.sellerPtr;
@@ -665,23 +744,30 @@ public:
     void activateListing() { listingActive = true; }
     void rescheduleDate(string d) { dateListed = d; }
 
-    void attachReview(Review r) {
-        if (reviewCount < 3) {
+    void attachReview(Review r)
+    {
+        if (reviewCount < 3)
+        {
             storedReviews[reviewCount++] = r;
             cout << "Review attached to listing #" << listingID << endl;
-        } else {
+        }
+        else
+        {
             cout << "Review limit reached for this listing." << endl;
         }
     }
 
-    void printAllReviews() const {
+    void printAllReviews() const
+    {
         cout << "Reviews for listing #" << listingID << ":" << endl;
         for (int i = 0; i < reviewCount; i++)
             storedReviews[i].printReview();
     }
 
-    void display() const override {
-        if (vehiclePtr && listingActive) {
+    void display() const override
+    {
+        if (vehiclePtr && listingActive)
+        {
             cout << "[Listing #" << listingID << " | Posted: " << dateListed << "]" << endl;
             vehiclePtr->displayDetails();
             if (sellerPtr)
@@ -699,8 +785,8 @@ public:
 
 int CarListing::totalCreated = 0;
 
-
-class Admin : public User {
+class Admin : public User
+{
     int clearanceLevel;
     string department;
     int actionsLogged;
@@ -708,7 +794,8 @@ class Admin : public User {
     string workShift;
 
 public:
-    Admin() : User() {
+    Admin() : User()
+    {
         clearanceLevel = 1;
         department = "General";
         actionsLogged = 0;
@@ -716,7 +803,8 @@ public:
         workShift = "Morning";
     }
 
-    Admin(int id, string name, string email, string phone, string dept) : User(id, name, email, phone) {
+    Admin(int id, string name, string email, string phone, string dept) : User(id, name, email, phone)
+    {
         clearanceLevel = 3;
         department = dept;
         actionsLogged = 0;
@@ -724,7 +812,8 @@ public:
         workShift = "Morning";
     }
 
-    Admin(const Admin &src) : User(src) {
+    Admin(const Admin &src) : User(src)
+    {
         clearanceLevel = src.clearanceLevel;
         department = src.department;
         actionsLogged = src.actionsLogged;
@@ -732,13 +821,15 @@ public:
         workShift = src.workShift;
     }
 
-    void approveListing(CarListing &cl) {
+    void approveListing(CarListing &cl)
+    {
         cl.activateListing();
         actionsLogged++;
         cout << "Admin " << fullName << " approved listing #" << cl.getListID() << endl;
     }
 
-    void removeListing(CarListing &cl) {
+    void removeListing(CarListing &cl)
+    {
         cl.deactivateListing();
         actionsLogged++;
         cout << "Admin " << fullName << " removed listing #" << cl.getListID() << endl;
@@ -746,7 +837,8 @@ public:
 
     void switchShift(string s) { workShift = s; }
 
-    void showProfile() const override {
+    void showProfile() const override
+    {
         cout << "Admin [" << userID << "]: " << fullName
              << " | Dept: " << department
              << " | Clearance: " << clearanceLevel
@@ -759,8 +851,8 @@ public:
     bool isOnDuty() const { return onDuty; }
 };
 
-
-class Marketplace : public ISearchable {
+class Marketplace : public ISearchable
+{
     CarListing listings[10];
     int listingCount;
     Message inbox[20];
@@ -770,30 +862,39 @@ class Marketplace : public ISearchable {
     static int totalMessages;
 
 public:
-    Marketplace() {
+    Marketplace()
+    {
         listingCount = 0;
         msgCount = 0;
         platformName = "PakWheels Clone";
     }
 
-    Marketplace(string name) {
+    Marketplace(string name)
+    {
         listingCount = 0;
         msgCount = 0;
         platformName = name;
     }
 
-    void postListing(CarListing cl) {
-        if (listingCount < 10) {
+    void postListing(CarListing cl)
+    {
+        if (listingCount < 10)
+        {
             listings[listingCount++] = cl;
             cout << "Listing #" << cl.getListID() << " posted on " << platformName << endl;
-        } else {
+        }
+        else
+        {
             cout << "Marketplace is full." << endl;
         }
     }
 
-    void deleteListing(int listingID) {
-        for (int i = 0; i < listingCount; i++) {
-            if (listings[i].getListID() == listingID) {
+    void deleteListing(int listingID)
+    {
+        for (int i = 0; i < listingCount; i++)
+        {
+            if (listings[i].getListID() == listingID)
+            {
                 listings[i].deactivateListing();
                 cout << "Listing #" << listingID << " deactivated." << endl;
                 return;
@@ -802,9 +903,12 @@ public:
         cout << "Listing not found." << endl;
     }
 
-    void updateListingPrice(int listingID, double newPrice) {
-        for (int i = 0; i < listingCount; i++) {
-            if (listings[i].getListID() == listingID && listings[i].isActive()) {
+    void updateListingPrice(int listingID, double newPrice)
+    {
+        for (int i = 0; i < listingCount; i++)
+        {
+            if (listings[i].getListID() == listingID && listings[i].isActive())
+            {
                 listings[i].getVehicle()->setPrice(newPrice);
                 cout << "Price updated for listing #" << listingID << endl;
                 return;
@@ -813,86 +917,112 @@ public:
         cout << "Active listing not found." << endl;
     }
 
-    void displayAllListings() const {
+    void displayAllListings() const
+    {
         cout << "\n===== " << platformName << " - All Active Listings =====\n";
         for (int i = 0; i < listingCount; i++)
             if (listings[i].isActive())
                 listings[i].display();
     }
 
-    void searchByBrand(string brand) override {
+    void searchByBrand(string brand) override
+    {
         totalSearches++;
         cout << "\n--- Search Results for Brand: " << brand << " ---\n";
         bool found = false;
-        for (int i = 0; i < listingCount; i++) {
-            if (listings[i].isActive() && listings[i].getVehicle() != NULL) {
-                if (listings[i].getVehicle()->getBrand() == brand) {
+        for (int i = 0; i < listingCount; i++)
+        {
+            if (listings[i].isActive() && listings[i].getVehicle() != NULL)
+            {
+                if (listings[i].getVehicle()->getBrand() == brand)
+                {
                     listings[i].display();
                     found = true;
                 }
             }
         }
-        if (!found) cout << "No listings found for brand: " << brand << endl;
+        if (!found)
+            cout << "No listings found for brand: " << brand << endl;
     }
 
-    void searchByModel(string model) override {
+    void searchByModel(string model) override
+    {
         totalSearches++;
         cout << "\n--- Search Results for Model: " << model << " ---\n";
         bool found = false;
-        for (int i = 0; i < listingCount; i++) {
-            if (listings[i].isActive() && listings[i].getVehicle() != NULL) {
-                if (listings[i].getVehicle()->getModelName() == model) {
+        for (int i = 0; i < listingCount; i++)
+        {
+            if (listings[i].isActive() && listings[i].getVehicle() != NULL)
+            {
+                if (listings[i].getVehicle()->getModelName() == model)
+                {
                     listings[i].display();
                     found = true;
                 }
             }
         }
-        if (!found) cout << "No listings found for model: " << model << endl;
+        if (!found)
+            cout << "No listings found for model: " << model << endl;
     }
 
-    void filterByPrice(double maxPrice) const override {
+    void filterByPrice(double maxPrice) const override
+    {
         cout << "\n--- Listings Under Rs." << maxPrice << " ---\n";
-        for (int i = 0; i < listingCount; i++) {
-            if (listings[i].isActive() && listings[i].getVehicle() != NULL) {
+        for (int i = 0; i < listingCount; i++)
+        {
+            if (listings[i].isActive() && listings[i].getVehicle() != NULL)
+            {
                 if (listings[i].getVehicle()->getPrice() <= maxPrice)
                     listings[i].display();
             }
         }
     }
 
-    void filterByYear(int minYear) const override {
+    void filterByYear(int minYear) const override
+    {
         cout << "\n--- Listings From Year " << minYear << " Onwards ---\n";
-        for (int i = 0; i < listingCount; i++) {
-            if (listings[i].isActive() && listings[i].getVehicle() != NULL) {
+        for (int i = 0; i < listingCount; i++)
+        {
+            if (listings[i].isActive() && listings[i].getVehicle() != NULL)
+            {
                 if (listings[i].getVehicle()->getManufactureYear() >= minYear)
                     listings[i].display();
             }
         }
     }
 
-    void filterByMileage(int maxKm) const {
+    void filterByMileage(int maxKm) const
+    {
         cout << "\n--- Listings With Under " << maxKm << " KM ---\n";
-        for (int i = 0; i < listingCount; i++) {
-            if (listings[i].isActive() && listings[i].getVehicle() != NULL) {
+        for (int i = 0; i < listingCount; i++)
+        {
+            if (listings[i].isActive() && listings[i].getVehicle() != NULL)
+            {
                 if (listings[i].getVehicle()->getOdometerKm() <= maxKm)
                     listings[i].display();
             }
         }
     }
 
-    void sendMessage(Message m) {
-        if (msgCount < 20) {
+    void sendMessage(Message m)
+    {
+        if (msgCount < 20)
+        {
             inbox[msgCount++] = m;
             totalMessages++;
             logMessageExchange(m);
-        } else {
+        }
+        else
+        {
             cout << "Inbox full." << endl;
         }
     }
 
-    void showInbox(int userID) const {
+    void showInbox(int userID) const
+    {
         cout << "\n--- Inbox for User #" << userID << " ---\n";
-        for (int i = 0; i < msgCount; i++) {
+        for (int i = 0; i < msgCount; i++)
+        {
             if (inbox[i].getReceiverID() == userID)
                 inbox[i].printMessage();
         }
@@ -905,3 +1035,123 @@ public:
 
 int Marketplace::totalSearches = 0;
 int Marketplace::totalMessages = 0;
+int main()
+{
+
+    Engine eng1("V4", 150, 1.8f, false, "Petrol");
+    Engine eng2("V6", 200, 2.4f, true, "Petrol");
+    Engine eng3("V2", 80, 0.125f, false, "Petrol");
+
+    Car car1(101, "Toyota", "Corolla", 2020, 3500000, 45000, eng1, 4, "Sedan", false, "Automatic");
+    Car car2(102, "Honda", "Civic", 2022, 4800000, 12000, eng2, 4, "Sedan", true, "Automatic");
+    Bike bike1(201, "Honda", "CD70", 2023, 185000, 8000, eng3, "Standard", true, "Air", 760);
+
+    Seller seller1(1, "Raza Ahmed", "raza@email.com", "03001234567", "Karachi");
+    Seller seller2(2, "Imran Malik", "imran@email.com", "03111234567", "Lahore");
+    seller1.addListing();
+    seller2.addListing();
+
+    Buyer buyer1(10, "Ali Hassan", "ali@email.com", "03211234567");
+    buyer1.setSpendingLimit(5000000);
+
+    Admin admin1(99, "Sara Khan", "sara@admin.com", "03311234567", "Listings");
+
+    CarListing cl1(1, &car1, &seller1);
+    CarListing cl2(2, &car2, &seller2);
+    CarListing cl3(3, &bike1, &seller1);
+
+    Marketplace market("PakWheels Clone");
+    market.postListing(cl1);
+    market.postListing(cl2);
+    market.postListing(cl3);
+
+    cout << "\n========== USER PROFILES ==========\n";
+    seller1.showProfile();
+    seller2.showProfile();
+    buyer1.showProfile();
+    admin1.showProfile();
+
+    cout << "\n========== ALL LISTINGS ==========\n";
+    market.displayAllListings();
+
+    cout << "\n========== SEARCH BY BRAND ==========\n";
+    market.searchByBrand("Toyota");
+
+    cout << "\n========== SEARCH BY MODEL ==========\n";
+    market.searchByModel("Civic");
+
+    cout << "\n========== FILTER BY PRICE ==========\n";
+    market.filterByPrice(4000000);
+
+    cout << "\n========== FILTER BY YEAR ==========\n";
+    market.filterByYear(2021);
+
+    cout << "\n========== FILTER BY MILEAGE ==========\n";
+    market.filterByMileage(20000);
+
+    cout << "\n========== BUYER SAVES VEHICLES ==========\n";
+    buyer1.saveVehicle(&car1);
+    buyer1.saveVehicle(&bike1);
+    buyer1.displaySaved();
+
+    cout << "\n========== MESSAGING ==========\n";
+    Message msg1(1, buyer1.getID(), seller1.getID(), "Is this car still available?", "18-05-2026 10:00");
+    Message msg2(2, buyer1.getID(), seller2.getID(), "Can you negotiate on the Civic?", "18-05-2026 10:15");
+    market.sendMessage(msg1);
+    market.sendMessage(msg2);
+    market.showInbox(seller1.getID());
+    market.showInbox(seller2.getID());
+
+    cout << "\n========== REVIEWS ==========\n";
+    Review r1(1, buyer1.getID(), "18-05-2026");
+    r1.submitReview(4, "Good condition, fair price.");
+    cl1.attachReview(r1);
+    cl1.printAllReviews();
+
+    cout << "\n========== ADMIN ACTIONS ==========\n";
+    admin1.removeListing(cl2);
+    admin1.approveListing(cl2);
+
+    cout << "\n========== OPERATOR OVERLOADING ==========\n";
+    if (car1 == car2)
+        cout << "Same vehicle." << endl;
+    else
+        cout << "Different vehicles (== overload works)." << endl;
+
+    Car combined = car1 + car2;
+    cout << "Combined listing price: Rs." << combined.getPrice() << endl;
+
+    if (seller1 == seller2)
+        cout << "Same seller." << endl;
+    else
+        cout << "Different sellers (== overload works)." << endl;
+
+    cout << "\n========== POLYMORPHISM ==========\n";
+    IVehicle *vList[3];
+    vList[0] = &car1;
+    vList[1] = &car2;
+    vList[2] = &bike1;
+    for (int i = 0; i < 3; i++)
+    {
+        cout << "Category: " << vList[i]->getCategory() << endl;
+        vList[i]->displayDetails();
+        cout << endl;
+    }
+
+    cout << "\n========== FRIEND FUNCTIONS ==========\n";
+    printVehicleSummary(car1);
+    logMessageExchange(msg1);
+    cout << "Engines match: " << (engineMatch(eng1, eng2) ? "Yes" : "No") << endl;
+
+    cout << "\n========== STATIC MEMBERS ==========\n";
+    cout << "Total Users Registered: " << User::getRegisteredCount() << endl;
+    cout << "Total Listings Created: " << CarListing::getTotalCreated() << endl;
+    cout << "Total Searches Performed: " << Marketplace::getTotalSearches() << endl;
+    cout << "Total Messages Sent: " << Marketplace::getTotalMessages() << endl;
+
+    cout << "\n========== ENGINE DIAGNOSTIC ==========\n";
+    eng1.runDiagnostic();
+    eng2.printSpecs();
+
+    return 0;
+}
