@@ -604,3 +604,304 @@ void logMessageExchange(const Message &m) {
          << m.senderID << " to user " << m.receiverID
          << " at " << m.sentAt << endl;
 }
+class CarListing : public IListable {
+    int listingID;
+    Vehicle *vehiclePtr;
+    Seller *sellerPtr;
+    bool listingActive;
+    string dateListed;
+    Review storedReviews[3];
+    int reviewCount;
+    static int totalCreated;
+
+public:
+    CarListing() {
+        listingID = 0;
+        vehiclePtr = NULL;
+        sellerPtr = NULL;
+        listingActive = false;
+        dateListed = "01-01-2026";
+        reviewCount = 0;
+        totalCreated++;
+    }
+
+    CarListing(int id, Vehicle *v, Seller *s) {
+        listingID = id;
+        vehiclePtr = v;
+        sellerPtr = s;
+        listingActive = true;
+        dateListed = "18-05-2026";
+        reviewCount = 0;
+        totalCreated++;
+    }
+
+    CarListing(const CarListing &src) {
+        listingID = src.listingID;
+        vehiclePtr = src.vehiclePtr;
+        sellerPtr = src.sellerPtr;
+        listingActive = src.listingActive;
+        dateListed = src.dateListed;
+        reviewCount = src.reviewCount;
+        for (int i = 0; i < reviewCount; i++)
+            storedReviews[i] = src.storedReviews[i];
+        totalCreated++;
+    }
+
+    CarListing &operator=(const CarListing &src) {
+        if (this != &src) {
+            listingID = src.listingID;
+            vehiclePtr = src.vehiclePtr;
+            sellerPtr = src.sellerPtr;
+            listingActive = src.listingActive;
+            dateListed = src.dateListed;
+            reviewCount = src.reviewCount;
+            for (int i = 0; i < reviewCount; i++)
+                storedReviews[i] = src.storedReviews[i];
+        }
+        return *this;
+    }
+
+    void deactivateListing() { listingActive = false; }
+    void activateListing() { listingActive = true; }
+    void rescheduleDate(string d) { dateListed = d; }
+
+    void attachReview(Review r) {
+        if (reviewCount < 3) {
+            storedReviews[reviewCount++] = r;
+            cout << "Review attached to listing #" << listingID << endl;
+        } else {
+            cout << "Review limit reached for this listing." << endl;
+        }
+    }
+
+    void printAllReviews() const {
+        cout << "Reviews for listing #" << listingID << ":" << endl;
+        for (int i = 0; i < reviewCount; i++)
+            storedReviews[i].printReview();
+    }
+
+    void display() const override {
+        if (vehiclePtr && listingActive) {
+            cout << "[Listing #" << listingID << " | Posted: " << dateListed << "]" << endl;
+            vehiclePtr->displayDetails();
+            if (sellerPtr)
+                cout << "  Seller: " << sellerPtr->getFullName() << " | " << sellerPtr->getBaseCity() << endl;
+            cout << endl;
+        }
+    }
+
+    bool isActive() const override { return listingActive; }
+    Vehicle *const getVehicle() const { return vehiclePtr; }
+    int getListID() const override { return listingID; }
+    string getPostDate() const override { return dateListed; }
+    static int getTotalCreated() { return totalCreated; }
+};
+
+int CarListing::totalCreated = 0;
+
+
+class Admin : public User {
+    int clearanceLevel;
+    string department;
+    int actionsLogged;
+    bool onDuty;
+    string workShift;
+
+public:
+    Admin() : User() {
+        clearanceLevel = 1;
+        department = "General";
+        actionsLogged = 0;
+        onDuty = false;
+        workShift = "Morning";
+    }
+
+    Admin(int id, string name, string email, string phone, string dept) : User(id, name, email, phone) {
+        clearanceLevel = 3;
+        department = dept;
+        actionsLogged = 0;
+        onDuty = true;
+        workShift = "Morning";
+    }
+
+    Admin(const Admin &src) : User(src) {
+        clearanceLevel = src.clearanceLevel;
+        department = src.department;
+        actionsLogged = src.actionsLogged;
+        onDuty = src.onDuty;
+        workShift = src.workShift;
+    }
+
+    void approveListing(CarListing &cl) {
+        cl.activateListing();
+        actionsLogged++;
+        cout << "Admin " << fullName << " approved listing #" << cl.getListID() << endl;
+    }
+
+    void removeListing(CarListing &cl) {
+        cl.deactivateListing();
+        actionsLogged++;
+        cout << "Admin " << fullName << " removed listing #" << cl.getListID() << endl;
+    }
+
+    void switchShift(string s) { workShift = s; }
+
+    void showProfile() const override {
+        cout << "Admin [" << userID << "]: " << fullName
+             << " | Dept: " << department
+             << " | Clearance: " << clearanceLevel
+             << " | On Duty: " << (onDuty ? "Yes" : "No") << endl;
+    }
+
+    string getRole() const override { return "Admin"; }
+    int getActionsLogged() const { return actionsLogged; }
+    string getWorkShift() const { return workShift; }
+    bool isOnDuty() const { return onDuty; }
+};
+
+
+class Marketplace : public ISearchable {
+    CarListing listings[10];
+    int listingCount;
+    Message inbox[20];
+    int msgCount;
+    string platformName;
+    static int totalSearches;
+    static int totalMessages;
+
+public:
+    Marketplace() {
+        listingCount = 0;
+        msgCount = 0;
+        platformName = "PakWheels Clone";
+    }
+
+    Marketplace(string name) {
+        listingCount = 0;
+        msgCount = 0;
+        platformName = name;
+    }
+
+    void postListing(CarListing cl) {
+        if (listingCount < 10) {
+            listings[listingCount++] = cl;
+            cout << "Listing #" << cl.getListID() << " posted on " << platformName << endl;
+        } else {
+            cout << "Marketplace is full." << endl;
+        }
+    }
+
+    void deleteListing(int listingID) {
+        for (int i = 0; i < listingCount; i++) {
+            if (listings[i].getListID() == listingID) {
+                listings[i].deactivateListing();
+                cout << "Listing #" << listingID << " deactivated." << endl;
+                return;
+            }
+        }
+        cout << "Listing not found." << endl;
+    }
+
+    void updateListingPrice(int listingID, double newPrice) {
+        for (int i = 0; i < listingCount; i++) {
+            if (listings[i].getListID() == listingID && listings[i].isActive()) {
+                listings[i].getVehicle()->setPrice(newPrice);
+                cout << "Price updated for listing #" << listingID << endl;
+                return;
+            }
+        }
+        cout << "Active listing not found." << endl;
+    }
+
+    void displayAllListings() const {
+        cout << "\n===== " << platformName << " - All Active Listings =====\n";
+        for (int i = 0; i < listingCount; i++)
+            if (listings[i].isActive())
+                listings[i].display();
+    }
+
+    void searchByBrand(string brand) override {
+        totalSearches++;
+        cout << "\n--- Search Results for Brand: " << brand << " ---\n";
+        bool found = false;
+        for (int i = 0; i < listingCount; i++) {
+            if (listings[i].isActive() && listings[i].getVehicle() != NULL) {
+                if (listings[i].getVehicle()->getBrand() == brand) {
+                    listings[i].display();
+                    found = true;
+                }
+            }
+        }
+        if (!found) cout << "No listings found for brand: " << brand << endl;
+    }
+
+    void searchByModel(string model) override {
+        totalSearches++;
+        cout << "\n--- Search Results for Model: " << model << " ---\n";
+        bool found = false;
+        for (int i = 0; i < listingCount; i++) {
+            if (listings[i].isActive() && listings[i].getVehicle() != NULL) {
+                if (listings[i].getVehicle()->getModelName() == model) {
+                    listings[i].display();
+                    found = true;
+                }
+            }
+        }
+        if (!found) cout << "No listings found for model: " << model << endl;
+    }
+
+    void filterByPrice(double maxPrice) const override {
+        cout << "\n--- Listings Under Rs." << maxPrice << " ---\n";
+        for (int i = 0; i < listingCount; i++) {
+            if (listings[i].isActive() && listings[i].getVehicle() != NULL) {
+                if (listings[i].getVehicle()->getPrice() <= maxPrice)
+                    listings[i].display();
+            }
+        }
+    }
+
+    void filterByYear(int minYear) const override {
+        cout << "\n--- Listings From Year " << minYear << " Onwards ---\n";
+        for (int i = 0; i < listingCount; i++) {
+            if (listings[i].isActive() && listings[i].getVehicle() != NULL) {
+                if (listings[i].getVehicle()->getManufactureYear() >= minYear)
+                    listings[i].display();
+            }
+        }
+    }
+
+    void filterByMileage(int maxKm) const {
+        cout << "\n--- Listings With Under " << maxKm << " KM ---\n";
+        for (int i = 0; i < listingCount; i++) {
+            if (listings[i].isActive() && listings[i].getVehicle() != NULL) {
+                if (listings[i].getVehicle()->getOdometerKm() <= maxKm)
+                    listings[i].display();
+            }
+        }
+    }
+
+    void sendMessage(Message m) {
+        if (msgCount < 20) {
+            inbox[msgCount++] = m;
+            totalMessages++;
+            logMessageExchange(m);
+        } else {
+            cout << "Inbox full." << endl;
+        }
+    }
+
+    void showInbox(int userID) const {
+        cout << "\n--- Inbox for User #" << userID << " ---\n";
+        for (int i = 0; i < msgCount; i++) {
+            if (inbox[i].getReceiverID() == userID)
+                inbox[i].printMessage();
+        }
+    }
+
+    static int getTotalSearches() { return totalSearches; }
+    static int getTotalMessages() { return totalMessages; }
+    string getPlatformName() const { return platformName; }
+};
+
+int Marketplace::totalSearches = 0;
+int Marketplace::totalMessages = 0;
